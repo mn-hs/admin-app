@@ -4,6 +4,7 @@ import com.ecommerce.adminapp.model.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class JdbcProductDao implements ProductDao{
@@ -26,27 +27,67 @@ public class JdbcProductDao implements ProductDao{
 
     @Override
     public List<Product> getAllProducts() {
-        return null;
+        List<Product> allProducts = new ArrayList<>();
+       String sql = "SELECT product_id, name, description, price, category " +
+                "FROM product " +
+                "ORDER BY product_id;";
+       SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
+        while (results.next()) {
+            Product product = mapRowToProduct(results);
+            allProducts.add(product);
+        }
+        return allProducts;
     }
 
     @Override
     public List<Product> getProductsWithNoSales() {
-        return null;
+        List<Product> noSaleProducts = new ArrayList<>();
+        String sql = "SELECT p.product_id, p.name, p.description, p.price, p.category " +
+                "FROM product AS p " +
+                "LEFT JOIN sale_item AS si ON p.product_id = si.product_id " +
+                "WHERE sale_id IS NULL " +
+                "ORDER BY p.product_id;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
+        while (results.next()){
+            Product product = mapRowToProduct(results);
+            noSaleProducts.add(product);
+        }
+        return noSaleProducts;
     }
 
     @Override
-    public List<Product> createProduct(Product newProduct) {
-        return null;
+    public Product createProduct(Product newProduct) {
+        String sql = "INSERT INTO product (name, description, price, category) " +
+                "VALUES(?, ?, ?, ?) RETURNING product_id;";
+        int newId = jdbcTemplate.queryForObject(sql, int.class, newProduct.getName(), newProduct.getDescription(),
+                newProduct.getPrice(), newProduct.getCategory());
+        return getProduct(newId);
     }
 
     @Override
-    public void updateProduct(Product updatedProduct) {
-
+    public boolean updateProduct(Product updatedProduct) {
+        String sql = "UPDATE product " +
+                "SET name = ?, description = ?, price = ?, category = ? " +
+                "WHERE product_id = ?;";
+        jdbcTemplate.update(sql, updatedProduct.getName(), updatedProduct.getDescription(),
+                updatedProduct.getPrice(), updatedProduct.getCategory(),
+                updatedProduct.getProductId());
+        if (getProduct(updatedProduct.getProductId()).equals(updatedProduct)){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public void deleteProduct(int productId) {
-
+        List<Product> deletableProducts = getProductsWithNoSales();
+        for (Product product : deletableProducts){
+            if (product.getProductId() == productId){
+                String sql = "DELETE FROM product WHERE product_id = ?";
+                jdbcTemplate.update(sql, productId);
+            }
+        }
     }
 
     public Product mapRowToProduct(SqlRowSet rs){

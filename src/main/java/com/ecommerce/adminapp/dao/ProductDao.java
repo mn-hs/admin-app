@@ -11,9 +11,9 @@ public interface ProductDao {
 
     List<Product> getProductsWithNoSales();
 
-    List<Product> createProduct(Product newProduct);
+    Product createProduct(Product newProduct);
 
-    void updateProduct(Product updatedProduct);
+    boolean updateProduct(Product updatedProduct);
 
     void deleteProduct(int productId);
 }

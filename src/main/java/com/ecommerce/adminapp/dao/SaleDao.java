@@ -11,9 +11,11 @@ public interface SaleDao {
 
     List<Sale> getSalesByProductId(int productId);
 
+    List<Sale> getSalesUnshipped();
+
     Sale createSale(Sale newSale);
 
-    void updateSale(Sale updatedSale);
+    boolean updateSale(Sale updatedSale);
 
     void deleteSale(int saleId);
 }
