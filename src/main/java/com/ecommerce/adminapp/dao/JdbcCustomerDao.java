@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.List;
 
 public class JdbcCustomerDao implements CustomerDao{
@@ -13,27 +14,58 @@ public class JdbcCustomerDao implements CustomerDao{
     public JdbcCustomerDao(JdbcTemplate jdbcTemplate){this.jdbcTemplate = jdbcTemplate;}
     @Override
     public Customer getCustomer(int customerId) {
-        return null;
+        Customer customer = null;
+        String sql = "SELECT customer_id, first_name, last_name, st_address, city, state, zip_code " +
+                "FROM customer " +
+                "WHERE customer_id = ?;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, customerId);
+        if (results.next()) {
+            customer = mapRowToCustomer(results);
+        }
+        return customer;
     }
 
     @Override
     public List<Customer> getAllCustomers() {
-        return null;
+        List<Customer> customers = new ArrayList<>();
+        String sql ="SELECT customer_id, first_name, last_name, st_address, city, state, zip_code " +
+                "FROM customer;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
+        while (results.next()) {
+            Customer customer = mapRowToCustomer(results);
+            customers.add(customer);
+        }
+        return customers;
     }
 
     @Override
     public Customer createCustomer(Customer newCustomer) {
-        return null;
+        String sql = "INSERT INTO customer (first_name, last_name, st_address, city, state, zip_code) " +
+                "VALUES (?, ?, ?, ?, ?, ?) RETURNING customer_id;";
+        int newId = jdbcTemplate.queryForObject(sql, int.class, newCustomer.getFirstName(), newCustomer.getLastName(), newCustomer.getStAddress(),
+                newCustomer.getCity(), newCustomer.getState(), newCustomer.getZipcode());
+        return getCustomer(newId);
     }
 
     @Override
-    public Customer updateCustomer(Customer customer) {
-        return null;
+    public boolean updateCustomer(Customer updatedCustomer) {
+        String sql = "UPDATE customer " +
+                "SET first_name = ?, last_name = ?, st_address = ?, city = ?, state = ?, zip_code = ? " +
+                "WHERE customer_id = ?";
+        jdbcTemplate.update(sql, updatedCustomer.getFirstName(), updatedCustomer.getLastName(), updatedCustomer.getStAddress(),
+                updatedCustomer.getCity(), updatedCustomer.getState(), updatedCustomer.getZipcode(),
+                updatedCustomer.getCustomerId());
+        if (getCustomer(updatedCustomer.getCustomerId()).equals(updatedCustomer)){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public void deleteCustomer(int customerId) {
-
+        String sql = "DELETE FROM customer WHERE customer_id = ?";
+        jdbcTemplate.update(sql, customerId);
     }
 
     public Customer mapRowToCustomer(SqlRowSet rs){
