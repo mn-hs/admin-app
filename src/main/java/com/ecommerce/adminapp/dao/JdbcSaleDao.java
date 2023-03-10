@@ -29,36 +29,39 @@ public class JdbcSaleDao implements SaleDao{
         return sale;
     }
 
-    @Override
-    public List<Sale> getSalesByCustomerId(int customerId) {
-        List<Sale> customerSales = new ArrayList<>();
-        String sql = "SELECT c.first_name || c.last_name AS name, s.sale_id, s.customer_id, s.sale_date, s.ship_date " +
-                "FROM sale AS s " +
-                "JOIN customer AS c ON s.customer_id = c.customer_id " +
-                "WHERE s.customer_id = ?;";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, customerId);
-        while (results.next()){
-            Sale sale = mapRowToSale(results);
-            customerSales.add(sale);
-        }
-        return customerSales;
-    }
+    public List<Sale> getSalesFiltered(int productId, int customerId){
+        List<Sale> filtered = new ArrayList<>();
+        SqlRowSet results = null;
+        String sql = null;
 
-    @Override
-    public List<Sale> getSalesByProductId(int productId) {
-        List<Sale> productSales = new ArrayList<>();
-        String sql = "SELECT c.first_name || c.last_name AS name, s.sale_id, s.customer_id, s.sale_date, s.ship_date " +
-                "FROM sale AS s " +
-                "LEFT JOIN sale_item AS si ON s.sale_id = si.sale_id " +
-                "JOIN customer AS c ON s.customer_id = c.customer_id " +
-                "WHERE si.product_id = ? " +
-                "ORDER BY si.product_id;";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, productId);
+        if (productId != 0 && customerId != 0){
+            throw new IllegalArgumentException("Please only enter one request parameter.");
+        } else if (productId != 0){
+            sql = "SELECT c.first_name || c.last_name AS name, s.sale_id, s.customer_id, s.sale_date, s.ship_date " +
+                    "FROM sale AS s " +
+                    "LEFT JOIN sale_item AS si ON s.sale_id = si.sale_id " +
+                    "JOIN customer AS c ON s.customer_id = c.customer_id " +
+                    "WHERE si.product_id = ? " +
+                    "ORDER BY si.product_id;";
+            results = jdbcTemplate.queryForRowSet(sql, productId);
+        } else if (customerId != 0){
+            sql = "SELECT c.first_name || c.last_name AS name, s.sale_id, s.customer_id, s.sale_date, s.ship_date " +
+                    "FROM sale AS s " +
+                    "JOIN customer AS c ON s.customer_id = c.customer_id " +
+                    "WHERE s.customer_id = ?;";
+            results = jdbcTemplate.queryForRowSet(sql, customerId);
+        } else {
+            sql = "SELECT c.first_name || c.last_name AS name, s.sale_id, s.customer_id, s.sale_date, s.ship_date " +
+                    "FROM sale AS s " +
+                    "JOIN customer AS c ON s.customer_id = c.customer_id;";
+            results = jdbcTemplate.queryForRowSet(sql);
+        }
+
         while (results.next()){
             Sale sale = mapRowToSale(results);
-            productSales.add(sale);
+            filtered.add(sale);
         }
-        return productSales;
+        return  filtered;
     }
 
     @Override

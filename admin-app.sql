@@ -44,4 +44,37 @@ CREATE TABLE sale_item (
 	CONSTRAINT FK_sale_item_id FOREIGN KEY(product_id) REFERENCES product(product_id)
 );
 
+-- Insert Test Data
+
+INSERT INTO product(name, description, price, category)
+VALUES
+ ('Product 1', 'Description 1',   9.99, 'books' ),
+ ('Product 2', 'Description 2',  19.00, 'appliances' ),
+ ('Product 3', 'Description 3', 123.45, 'electronics' ),
+ ('Product 4', 'Description 4',   0.99, 'books' );
+
+INSERT INTO customer (first_name, last_name, st_address, city, state, zip_code)
+VALUES
+ ('Customer1', 'Customer1', 'Addr 1-1', 'City 1', 'S1', 11111),
+ ('Customer2', 'Customer2', 'Addr 2-1', 'City 2', 'S2', 22222),
+ ('Customer3', 'Customer3', 'Addr 3-1', 'City 3', 'S3', 33333),
+ ('Customer4', 'Customer4', 'Addr 4-1', 'City 4', 'S4', 44444);
+
+
+INSERT INTO sale (customer_id, sale_date, ship_date)
+VALUES
+ (1, '2022-01-01', null),
+ (1, '2022-02-01', '2022-02-02'),
+ (2, '2022-03-01', null),
+ (2, '2022-01-01', '2022-01-02');
+
+INSERT INTO sale_item (	sale_id, product_id, quantity)
+VALUES
+ (1, 1, 1),
+ (1, 2, 1),
+ (1, 4, 1),
+ (2, 4, 10),
+ (2, 1, 10),
+ (3, 1, 100);
+
 COMMIT TRANSACTION;

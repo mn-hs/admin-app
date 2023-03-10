@@ -2,7 +2,6 @@ package com.ecommerce.adminapp.controller;
 
 import com.ecommerce.adminapp.dao.JdbcSaleItemDao;
 import com.ecommerce.adminapp.model.SaleItem;
-import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

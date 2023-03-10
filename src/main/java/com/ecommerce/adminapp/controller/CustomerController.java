@@ -2,7 +2,6 @@ package com.ecommerce.adminapp.controller;
 
 import com.ecommerce.adminapp.dao.JdbcCustomerDao;
 import com.ecommerce.adminapp.model.Customer;
-import org.apache.logging.log4j.message.ReusableMessage;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -7,11 +7,9 @@ import java.util.List;
 public interface SaleDao {
     Sale getSale(int saleId);
 
-    List<Sale> getSalesByCustomerId(int customerId);
-
-    List<Sale> getSalesByProductId(int productId);
-
     List<Sale> getSalesUnshipped();
+
+    List<Sale> getSalesFiltered(int productId, int customerId);
 
     Sale createSale(Sale newSale);
 

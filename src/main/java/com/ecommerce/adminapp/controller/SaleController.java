@@ -21,15 +21,10 @@ public class SaleController {
         return saleDao.getSale(saleId);
     }
 
-    //combine getSalesByCustomer/Product ID into one method in controller & jdbcDao
     @RequestMapping(method = RequestMethod.GET)
-    public List<Sale> getSalesByCustomerId(@RequestParam(name = "customerId") int customerId){
-        return saleDao.getSalesByCustomerId(customerId);
-    }
-
-    @RequestMapping(method = RequestMethod.GET)
-    public List<Sale> getSalesFiltered(@RequestParam(name = "productId") int productId){
-        return saleDao.getSalesByProductId(productId);
+    public List<Sale> getSalesFiltered(@RequestParam(required = false, defaultValue = "0") int productId,
+                                       @RequestParam(required = false, defaultValue = "0") int customerId){
+        return saleDao.getSalesFiltered(productId, customerId);
     }
 
     @RequestMapping(path = "/unshipped", method = RequestMethod.GET)
