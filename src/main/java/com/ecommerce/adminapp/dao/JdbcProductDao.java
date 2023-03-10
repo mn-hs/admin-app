@@ -3,10 +3,12 @@ package com.ecommerce.adminapp.dao;
 import com.ecommerce.adminapp.model.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class JdbcProductDao implements ProductDao{
 
     JdbcTemplate jdbcTemplate;

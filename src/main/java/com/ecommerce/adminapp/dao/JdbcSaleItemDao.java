@@ -3,10 +3,12 @@ package com.ecommerce.adminapp.dao;
 import com.ecommerce.adminapp.model.SaleItem;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class JdbcSaleItemDao implements SaleItemDao{
 
     JdbcTemplate jdbcTemplate;
@@ -34,6 +36,7 @@ public class JdbcSaleItemDao implements SaleItemDao{
         saleItem.setSaleId(rs.getInt("sale_id"));
         saleItem.setProductId(rs.getInt("product_id"));
         saleItem.setQuantity(rs.getInt("quantity"));
+        saleItem.setPrice(rs.getBigDecimal("price"));
         return saleItem;
     }
 }

@@ -20,6 +20,13 @@ public class Sale {
         this.customerName = customerName;
     }
 
+    public Sale(int saleId, int customerId, LocalDate saleDate, LocalDate shipDate) {
+        this.saleId = saleId;
+        this.customerId = customerId;
+        this.saleDate = saleDate;
+        this.shipDate = shipDate;
+    }
+
     public int getSaleId() {
         return saleId;
     }

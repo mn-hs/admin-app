@@ -10,6 +10,8 @@ public class SaleItem {
     private String productName;
     private BigDecimal price;
 
+    private BigDecimal saleItemTotal;
+
     public SaleItem(){}
 
     public SaleItem(int saleItemId, int saleId, int productId, int quantity,
@@ -68,6 +70,5 @@ public class SaleItem {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
-        this.price.setScale(2);
     }
 }
