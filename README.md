@@ -1,7 +1,7 @@
 E-Commerce-Admin Application:
 ---
 
-Uses Java, postgreSQL, and Spring Boot to manage customer, product, and sale data in a database using basic CRUD methods. Functionality is accessible through written REST api’s.
+Uses Java, postgreSQL, and Spring Boot to manage customer, product, and sale data in a database using basic CRUD methods. Functionality is accessible through written REST api.
 ------------------------------------------------------
 API Endpoints:
 
