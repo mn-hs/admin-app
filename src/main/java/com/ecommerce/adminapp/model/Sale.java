@@ -1,5 +1,7 @@
 package com.ecommerce.adminapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.time.LocalDate;
 
 public class Sale {
@@ -7,6 +9,7 @@ public class Sale {
     private int customerId;
     private LocalDate saleDate;
     private LocalDate shipDate;
+    @JsonIgnore
     private String customerName;
 
     public Sale(){}
